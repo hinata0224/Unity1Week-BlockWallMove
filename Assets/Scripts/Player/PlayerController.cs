@@ -46,7 +46,8 @@ namespace Player
         {
             if (isGround)
             {
-                rb.AddForce(0, jumpPower, 0);
+                Debug.Log("z8ii");
+                rb.velocity = new Vector3(0, jumpPower, 0);
             }
         }
 
