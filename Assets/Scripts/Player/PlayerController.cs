@@ -16,6 +16,7 @@ namespace Player
         private float gravity;
         private GravityDecisionType gravityType;
         private bool isGround = false;
+        private bool isJump = false;
 
         private Rigidbody rb;
 
@@ -30,7 +31,7 @@ namespace Player
         void Start()
         {
             rb.useGravity = false;
-            gravityType = GravityDecisionType.GravityDown;
+            gravityType = GravityDecisionType.GravityUp;
             gravity = gravityValue;
             this.FixedUpdateAsObservable()
                 .Subscribe(_ =>
@@ -62,7 +63,8 @@ namespace Player
         {
             if (isGround)
             {
-                Debug.Log("zump");
+                isGround = false;
+                isJump = true;
                 gravity = jumpPower;
             }
         }
@@ -91,6 +93,7 @@ namespace Player
             {
                 if (hit.collider.gameObject.CompareTag(TagName.Ground))
                 {
+                    Debug.Log(hit.collider.name);
                     gravityType = GravityDecisionType.GravityRight;
                     Vector3 angle = transform.eulerAngles;
                     angle.z = 90;
@@ -99,14 +102,16 @@ namespace Player
             }
             // 上側に地面があるか
             if (Physics.BoxCast(transform.position, new Vector3(1, 1, 1), transform.up, out hit
-            , Quaternion.identity, gravityDistance))
+            , Quaternion.identity, gravityDistance / 2))
             {
-                if (hit.collider.gameObject.CompareTag(TagName.Ground))
+                if (hit.collider.gameObject.CompareTag(TagName.Ground) && isJump)
                 {
                     gravityType = GravityDecisionType.GravityUp;
                     Vector3 angle = transform.eulerAngles;
                     angle.z = 180;
                     transform.eulerAngles += angle;
+                    gravity = Mathf.Abs(gravityValue);
+                    isJump = false;
                 }
             }
         }
@@ -172,14 +177,7 @@ namespace Player
             if (other.gameObject.CompareTag(TagName.Ground))
             {
                 isGround = true;
-            }
-        }
-
-        private void OnCollisionExit(Collision other)
-        {
-            if (other.gameObject.CompareTag(TagName.Ground))
-            {
-                isGround = false;
+                isJump = false;
             }
         }
     }
