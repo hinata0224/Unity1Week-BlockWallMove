@@ -2,7 +2,6 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Constants;
-using UniRx;
 using System;
 
 namespace Player
@@ -116,19 +115,21 @@ namespace Player
                     Vector3 angle = transform.eulerAngles;
                     angle.z = -90;
                     transform.eulerAngles += angle;
+                    Debug.Log(hit.collider.name + "Left");
                 }
             }
             // 右側に地面があるか
             if (Physics.BoxCast(transform.position, new Vector3(1, 1, 1), transform.right, out hit
             , Quaternion.identity, gravityDistance))
             {
-                if (hit.collider.gameObject.CompareTag(TagName.Ground))
+                if (hit.collider.gameObject.CompareTag(TagName.Ground) && !isGround)
                 {
-                    Debug.Log(hit.collider.name);
                     gravityType = GravityDecisionType.GravityRight;
                     Vector3 angle = transform.eulerAngles;
                     angle.z = 90;
                     transform.eulerAngles += angle;
+                    Debug.Log(hit.collider.name + "Right" + angle);
+                    isJump = false;
                 }
             }
             // 上側に地面があるか
@@ -137,6 +138,7 @@ namespace Player
             {
                 if (hit.collider.gameObject.CompareTag(TagName.Ground) && isJump)
                 {
+                    Debug.Log(hit.collider.name + "Up");
                     gravityType = GravityDecisionType.GravityUp;
                     Vector3 angle = transform.eulerAngles;
                     angle.z = 180;
