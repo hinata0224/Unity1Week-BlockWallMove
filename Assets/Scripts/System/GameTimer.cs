@@ -3,7 +3,7 @@ using System;
 
 public class GameTimer
 {
-    private int gameCount = 5;
+    private int gameCount = 60;
     private Subject<Unit> timerOver = new Subject<Unit>();
     private ReactiveProperty<int> timeCount = new ReactiveProperty<int>(0);
 
