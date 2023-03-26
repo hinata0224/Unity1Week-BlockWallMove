@@ -16,6 +16,7 @@ namespace Result
             player = _player;
 
             player.GetIsGameOver()
+                .Distinct()
                 .Subscribe(_ => view.OpenGameOverWindow())
                 .AddTo(disposables);
         }

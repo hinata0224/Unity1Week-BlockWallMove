@@ -97,6 +97,7 @@ namespace Player
         public void EndGame()
         {
             isPlay = false;
+            isGameOver.OnNext(Unit.Default);
         }
 
         /// <summary>
@@ -115,7 +116,6 @@ namespace Player
                     Vector3 angle = transform.eulerAngles;
                     angle.z = -90;
                     transform.eulerAngles += angle;
-                    Debug.Log(hit.collider.name + "Left");
                 }
             }
             // 右側に地面があるか
@@ -128,7 +128,6 @@ namespace Player
                     Vector3 angle = transform.eulerAngles;
                     angle.z = 90;
                     transform.eulerAngles += angle;
-                    Debug.Log(hit.collider.name + "Right" + angle);
                     isJump = false;
                 }
             }
@@ -138,7 +137,6 @@ namespace Player
             {
                 if (hit.collider.gameObject.CompareTag(TagName.Ground) && isJump)
                 {
-                    Debug.Log(hit.collider.name + "Up");
                     gravityType = GravityDecisionType.GravityUp;
                     Vector3 angle = transform.eulerAngles;
                     angle.z = 180;
