@@ -14,16 +14,19 @@ namespace Other_System
 
         private InputControllerPresenter inputControllerPresenter;
         private GameClearPresenter gameClearPresenter;
+        private GameOverPresenter gameOverPresenter;
 
         void Start()
         {
             inputControllerPresenter = new InputControllerPresenter(inputController, playerController);
             gameClearPresenter = new GameClearPresenter(resultView);
+            gameOverPresenter = new GameOverPresenter(resultView, playerController);
         }
 
         private void OnDestroy()
         {
             inputControllerPresenter.EndGame();
+            gameOverPresenter.GameEnd();
         }
     }
 }

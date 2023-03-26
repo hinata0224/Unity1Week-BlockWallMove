@@ -2,6 +2,8 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Constants;
+using UniRx;
+using System;
 
 namespace Player
 {
@@ -12,11 +14,16 @@ namespace Player
         [SerializeField, Header("ジャンプ力")] private float jumpPower = 2f;
         [SerializeField, Header("重力の大きさ")] private float gravityValue = 0.5f;
         [SerializeField, Header("重力判定")] private float gravityDistance = 3f;
+        [SerializeField, Header("ゲームオーバーになる時間")] private float gameOverTime = 10f;
 
         private float gravity;
+        private float nowTime = 0;
         private GravityDecisionType gravityType;
         private bool isGround = false;
         private bool isJump = false;
+        private bool isPlay = true;
+
+        private Subject<Unit> isGameOver = new Subject<Unit>();
 
         private Rigidbody rb;
 
@@ -45,15 +52,31 @@ namespace Player
         /// </summary>
         private void PlayerMove()
         {
-            GravityDecision();
-            SetGravity();
-
-            if (gravity != gravityValue)
+            if (isPlay)
             {
-                GravityCalculation();
+                GravityDecision();
+                SetGravity();
+                if (!isGround)
+                {
+                    nowTime += Time.deltaTime;
+                    if (nowTime >= gameOverTime)
+                    {
+                        isGameOver.OnNext(Unit.Default);
+                        isPlay = false;
+                    }
+                }
+                else
+                {
+                    nowTime = 0;
+                }
+
+                if (gravity != gravityValue)
+                {
+                    GravityCalculation();
+                }
+                // 移動処理
+                rb.velocity = transform.TransformDirection(new Vector3(movePower, gravity, 0));
             }
-            // 移動処理
-            rb.velocity = transform.TransformDirection(new Vector3(movePower, gravity, 0));
         }
 
         /// <summary>
@@ -67,6 +90,14 @@ namespace Player
                 isJump = true;
                 gravity = jumpPower;
             }
+        }
+
+        /// <summary>
+        /// ゲーム終了
+        /// </summary>
+        public void EndGame()
+        {
+            isPlay = false;
         }
 
         /// <summary>
@@ -170,6 +201,11 @@ namespace Player
             {
                 gravity -= gravityValue;
             }
+        }
+
+        public IObservable<Unit> GetIsGameOver()
+        {
+            return isGameOver;
         }
 
         private void OnCollisionEnter(Collision other)
