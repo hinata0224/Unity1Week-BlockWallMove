@@ -18,7 +18,7 @@ namespace Player
         void Start()
         {
             this.UpdateAsObservable()
-                .Subscribe(_ => transform.position = new Vector3(player.transform.position.x, height, transform.position.z))
+                .Subscribe(_ => transform.position = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z))
                 .AddTo(this);
         }
 
