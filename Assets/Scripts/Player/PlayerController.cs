@@ -23,9 +23,7 @@ namespace Player
         private bool isPlay = true;
 
         private Subject<Unit> isGameOver = new Subject<Unit>();
-
         private Rigidbody rb;
-
 
         private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -40,6 +38,7 @@ namespace Player
             gravityType = GravityDecisionType.GravityUp;
             gravity = gravityValue;
             this.FixedUpdateAsObservable()
+                .Where(_ => isPlay)
                 .Subscribe(_ =>
                 {
                     PlayerMove();
@@ -51,31 +50,29 @@ namespace Player
         /// </summary>
         private void PlayerMove()
         {
-            if (isPlay)
+            GravityDecision();
+            SetGravity();
+            if (!isGround)
             {
-                GravityDecision();
-                SetGravity();
-                if (!isGround)
+                nowTime += Time.deltaTime;
+                if (nowTime >= gameOverTime)
                 {
-                    nowTime += Time.deltaTime;
-                    if (nowTime >= gameOverTime)
-                    {
-                        isGameOver.OnNext(Unit.Default);
-                        isPlay = false;
-                    }
+                    isGameOver.OnNext(Unit.Default);
+                    isPlay = false;
                 }
-                else
-                {
-                    nowTime = 0;
-                }
-
-                if (gravity != gravityValue)
-                {
-                    GravityCalculation();
-                }
-                // 移動処理
-                rb.velocity = transform.TransformDirection(new Vector3(movePower, gravity, 0));
             }
+            else
+            {
+                nowTime = 0;
+            }
+
+            if (gravity != gravityValue)
+            {
+                GravityCalculation();
+            }
+            // 移動処理
+            rb.velocity = transform.TransformDirection(new Vector3(movePower, gravity, 0));
+
         }
 
         /// <summary>

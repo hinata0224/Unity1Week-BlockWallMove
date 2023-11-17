@@ -5,12 +5,12 @@ namespace Input
 {
     public class InputControllerPresenter
     {
-        private InputController controller;
+        private IInputController controller;
         private PlayerController player;
 
         private CompositeDisposable disposables = new CompositeDisposable();
 
-        public InputControllerPresenter(InputController _controller, PlayerController _player)
+        public InputControllerPresenter(IInputController _controller, PlayerController _player)
         {
             controller = _controller;
             player = _player;
@@ -20,7 +20,7 @@ namespace Input
 
         private void Monitoring()
         {
-            controller.GetPlayerJump()
+            controller.JunpObservable
                 .Subscribe(_ => player.Jump())
                 .AddTo(disposables);
         }
