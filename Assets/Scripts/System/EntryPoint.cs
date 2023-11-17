@@ -3,22 +3,28 @@ using Player;
 using Input;
 using Result;
 using UI;
+using Constants;
 
 namespace Other_System
 {
     public class EntryPoint : MonoBehaviour
     {
         [Header("参照スクリプト")]
-        [SerializeField] private PlayerController playerController;
         [SerializeField] private InputController inputController;
         [SerializeField] private ResultView resultView;
         [SerializeField] private TimerView timerView;
 
+        private IPlayerController playerController;
         private InputControllerPresenter inputControllerPresenter;
         private GameClearPresenter gameClearPresenter;
         private GameOverPresenter gameOverPresenter;
         private GameTimerPresenter gameTimerPresenter;
         private GameTimer gameTimer = new GameTimer();
+
+        private void Awake()
+        {
+            playerController = GameObject.FindGameObjectWithTag(TagName.Player).GetComponent<PlayerController>();
+        }
 
         void Start()
         {

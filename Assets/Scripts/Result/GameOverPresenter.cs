@@ -6,16 +6,16 @@ namespace Result
     public class GameOverPresenter
     {
         private static ResultView view;
-        private static PlayerController player;
+        private static IPlayerController player;
 
         private CompositeDisposable disposables = new CompositeDisposable();
 
-        public GameOverPresenter(ResultView _view, PlayerController _player)
+        public GameOverPresenter(ResultView _view, IPlayerController _player)
         {
             view = _view;
             player = _player;
 
-            player.GetIsGameOver()
+            player.IsGameOver
                 .Distinct()
                 .Subscribe(_ => view.OpenGameOverWindow())
                 .AddTo(disposables);

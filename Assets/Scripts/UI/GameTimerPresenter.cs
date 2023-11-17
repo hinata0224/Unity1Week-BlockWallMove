@@ -8,7 +8,7 @@ namespace Other_System
     {
         private bool endGame = false;
         private CompositeDisposable disposables = new CompositeDisposable();
-        public GameTimerPresenter(GameTimer gameTimer, TimerView view, PlayerController player)
+        public GameTimerPresenter(GameTimer gameTimer, TimerView view, IPlayerController player)
         {
             gameTimer.GetTimeCount()
                 .Where(_ => !endGame)
