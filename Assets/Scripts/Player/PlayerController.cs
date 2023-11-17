@@ -7,7 +7,7 @@ using System;
 namespace Player
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IPlayerController
     {
         [SerializeField, Header("移動速度")] private float movePower = 3f;
         [SerializeField, Header("ジャンプ力")] private float jumpPower = 2f;
@@ -23,6 +23,7 @@ namespace Player
         private bool isPlay = true;
 
         private Subject<Unit> isGameOver = new Subject<Unit>();
+        public IObservable<Unit> IsGameOver => isGameOver;
         private Rigidbody rb;
 
         private CompositeDisposable disposables = new CompositeDisposable();
@@ -198,11 +199,6 @@ namespace Player
             {
                 gravity -= gravityValue;
             }
-        }
-
-        public IObservable<Unit> GetIsGameOver()
-        {
-            return isGameOver;
         }
 
         private void OnCollisionEnter(Collision other)

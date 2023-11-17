@@ -6,11 +6,11 @@ namespace Input
     public class InputControllerPresenter
     {
         private IInputController controller;
-        private PlayerController player;
+        private IPlayerController player;
 
         private CompositeDisposable disposables = new CompositeDisposable();
 
-        public InputControllerPresenter(IInputController _controller, PlayerController _player)
+        public InputControllerPresenter(IInputController _controller, IPlayerController _player)
         {
             controller = _controller;
             player = _player;
